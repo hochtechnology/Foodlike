@@ -199,7 +199,7 @@ function SplashScreen({route, navigation}) {
   return (
     <Container>
       <Title>Foodlike</Title>
-     
+
       <View
         style={{
           position: 'absolute',

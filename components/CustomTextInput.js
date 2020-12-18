@@ -33,11 +33,11 @@ const CustomTextInput = (props) => {
   return (
     <TextInput
       style={{
-        width: '80%',
+        width: config.responsiveScreenWidth(77),
         height: config.responsiveScreenHeight(7),
         fontSize: 18,
         paddingHorizontal: 18,
-        fontWeight: 'bold',
+
         backgroundColor:
           theme.mode === 'no-preference'
             ? '#fafafa'

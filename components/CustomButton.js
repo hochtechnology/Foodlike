@@ -41,7 +41,7 @@ const EnterButton = (props) => {
             : theme.mode === 'light'
             ? config.secondaryColor
             : '#6762F5',
-        width: config.responsiveScreenWidth(60),
+        width: config.responsiveScreenWidth(50),
         height: config.responsiveScreenHeight(6),
         borderTopLeftRadius: 30,
         borderBottomLeftRadius: Platform.OS === 'android' ? 80 : 100,
@@ -65,7 +65,7 @@ const EnterButton = (props) => {
       <Text
         style={{
           color: 'white',
-          fontSize: config.responsiveScreenFontSize(2.4),
+          fontSize: config.responsiveScreenFontSize(2.0),
           fontWeight: 'bold',
         }}>
         {props.text}

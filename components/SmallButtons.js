@@ -49,7 +49,6 @@ const SmallButton = (props) => {
               : `${config.secondaryColor}`,
           fontSize: config.responsiveScreenFontSize(1.8),
           fontWeight: 'bold',
-          textDecorationLine: 'underline',
         }}>
         {props.text}
       </Text>

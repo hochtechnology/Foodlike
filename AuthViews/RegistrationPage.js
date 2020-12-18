@@ -106,7 +106,7 @@ function Registration({route, navigation}) {
               height: undefined,
               alignItems: 'center',
               justifyContent: 'center',
-              paddingTop: Platform.OS === 'ios' ? '25%' : '25%',
+              paddingTop: Platform.OS === 'ios' ? 0 : '10%',
               paddingBottom:
                 Platform.OS === 'ios'
                   ? '15%'
@@ -330,103 +330,156 @@ function Registration({route, navigation}) {
 
             {/* from days picker */}
             <InfoText text={'From'}></InfoText>
-
-            <Picker
-              selectedValue={selectedItemFrom}
-              style={{
-                width: '70%',
-                color:
-                  Platform.OS === 'android'
-                    ? theme.mode === 'no-preference'
-                      ? '#575c66'
-                      : theme.mode === 'light'
-                      ? '#575c66'
-                      : '#eaeaeb'
-                    : '',
-                backgroundColor:
-                  Platform.OS === 'android'
-                    ? theme.mode === 'no-preference'
+            <View
+              style={[
+                styles.inputStyle,
+                {
+                  backgroundColor:
+                    theme.mode === 'no-preference'
                       ? '#fafafa'
                       : theme.mode === 'light'
                       ? '#eaeaeb'
-                      : '#575c66'
-                    : '',
-                height: Platform.OS === 'ios' ? '8%' : '5%',
-              }}
-              itemStyle={{
-                backgroundColor:
-                  theme.mode === 'no-preference'
-                    ? '#fafafa'
-                    : theme.mode === 'light'
-                    ? '#eaeaeb'
-                    : '#575c66',
-                borderRadius: 20,
-                height: '100%',
-              }}
-              onValueChange={(itemValue, itemIndex) => {
-                if (selectedItemTo === itemValue) {
-                  Platform.OS === 'android'
-                    ? ToastAndroid.show('Select Another day', ToastAndroid.LONG)
-                    : Alert.alert('Select Another day');
-                  return false;
-                } else {
-                  setSelectedItemFrom(itemValue);
-                }
-              }}>
-              {wheelPickerData.map((item, index) => {
-                return <Picker.Item label={item} value={index} />;
-              })}
-            </Picker>
-
+                      : '#575c66',
+                  borderRadius: 20,
+                  color:
+                    theme.mode === 'no-preference'
+                      ? '#575c66'
+                      : theme.mode === 'light'
+                      ? '#575c66'
+                      : '#eaeaeb',
+                  justifyContent: 'center',
+                },
+              ]}>
+              <Picker
+                selectedValue={selectedItemFrom}
+                style={{
+                  width: '70%',
+                  color:
+                    Platform.OS === 'android'
+                      ? theme.mode === 'no-preference'
+                        ? '#575c66'
+                        : theme.mode === 'light'
+                        ? '#575c66'
+                        : '#eaeaeb'
+                      : '',
+                  backgroundColor:
+                    Platform.OS === 'android'
+                      ? theme.mode === 'no-preference'
+                        ? '#fafafa'
+                        : theme.mode === 'light'
+                        ? '#eaeaeb'
+                        : '#575c66'
+                      : '',
+                  height:
+                    Platform.OS === 'ios'
+                      ? config.responsiveScreenHeight(6)
+                      : '50%',
+                }}
+                itemStyle={{
+                  backgroundColor:
+                    theme.mode === 'no-preference'
+                      ? '#fafafa'
+                      : theme.mode === 'light'
+                      ? '#eaeaeb'
+                      : '#575c66',
+                  borderRadius: 20,
+                  height: config.responsiveScreenHeight(6),
+                  fontSize: config.responsiveScreenFontSize(1.88),
+                }}
+                onValueChange={(itemValue, itemIndex) => {
+                  if (selectedItemTo === itemValue) {
+                    Platform.OS === 'android'
+                      ? ToastAndroid.show(
+                          'Select Another day',
+                          ToastAndroid.LONG,
+                        )
+                      : Alert.alert('Select Another day');
+                    return false;
+                  } else {
+                    setSelectedItemFrom(itemValue);
+                  }
+                }}>
+                {wheelPickerData.map((item, index) => {
+                  return <Picker.Item label={item} value={index} />;
+                })}
+              </Picker>
+            </View>
             {/* To days picker */}
             <InfoText text={'To'}></InfoText>
-
-            <Picker
-              selectedValue={selectedItemTo}
-              style={{
-                width: '70%',
-                color:
-                  Platform.OS === 'android'
-                    ? theme.mode === 'no-preference'
-                      ? '#575c66'
-                      : theme.mode === 'light'
-                      ? '#575c66'
-                      : '#eaeaeb'
-                    : '',
-                backgroundColor:
-                  Platform.OS === 'android'
-                    ? theme.mode === 'no-preference'
+            <View
+              style={[
+                styles.inputStyle,
+                {
+                  backgroundColor:
+                    theme.mode === 'no-preference'
                       ? '#fafafa'
                       : theme.mode === 'light'
                       ? '#eaeaeb'
-                      : '#575c66'
-                    : '',
-                height: Platform.OS === 'ios' ? '8%' : '5%',
-              }}
-              itemStyle={{
-                backgroundColor:
-                  theme.mode === 'no-preference'
-                    ? '#fafafa'
-                    : theme.mode === 'light'
-                    ? '#eaeaeb'
-                    : '#575c66',
-                borderRadius: 20,
-                height: '100%',
-              }}
-              onValueChange={(itemValue, itemIndex) => {
-                if (selectedItemFrom === itemValue) {
-                  Platform.OS === 'android'
-                    ? ToastAndroid.show('Select Another day', ToastAndroid.LONG)
-                    : Alert.alert('Select Another day');
-                  return false;
-                } else {
-                  setSelectedItemTo(itemValue);
-                }
-              }}>
-              {wheelPickerData.map((item, index) => {
-                return <Picker.Item label={item} value={index} />;
-              })}
-            </Picker>
+                      : '#575c66',
+                  borderRadius: 20,
+                  color:
+                    theme.mode === 'no-preference'
+                      ? '#575c66'
+                      : theme.mode === 'light'
+                      ? '#575c66'
+                      : '#eaeaeb',
+                  justifyContent: 'center',
+                },
+              ]}>
+              <Picker
+                selectedValue={selectedItemTo}
+                style={{
+                  width: '70%',
+                  color:
+                    Platform.OS === 'android'
+                      ? theme.mode === 'no-preference'
+                        ? '#575c66'
+                        : theme.mode === 'light'
+                        ? '#575c66'
+                        : '#eaeaeb'
+                      : '',
+                  backgroundColor:
+                    Platform.OS === 'android'
+                      ? theme.mode === 'no-preference'
+                        ? '#fafafa'
+                        : theme.mode === 'light'
+                        ? '#eaeaeb'
+                        : '#575c66'
+                      : '',
+                  height:
+                    Platform.OS === 'ios'
+                      ? config.responsiveScreenHeight(6)
+                      : '50%',
+                }}
+                itemStyle={{
+                  backgroundColor:
+                    theme.mode === 'no-preference'
+                      ? '#fafafa'
+                      : theme.mode === 'light'
+                      ? '#eaeaeb'
+                      : '#575c66',
+                  borderRadius: 20,
+                  height: config.responsiveScreenHeight(6),
+                  fontSize: config.responsiveScreenFontSize(1.88),
+                }}
+                onValueChange={(itemValue, itemIndex) => {
+                  if (selectedItemFrom === itemValue) {
+                    Platform.OS === 'android'
+                      ? ToastAndroid.show(
+                          'Select Another day',
+                          ToastAndroid.LONG,
+                        )
+                      : Alert.alert('Select Another day');
+                    return false;
+                  } else {
+                    setSelectedItemTo(itemValue);
+                  }
+                }}>
+                {wheelPickerData.map((item, index) => {
+                  return <Picker.Item label={item} value={index} />;
+                })}
+              </Picker>
+            </View>
 
             {/* arrivals */}
 
@@ -442,7 +495,7 @@ function Registration({route, navigation}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: '8%',
-                  width: '80%',
+                  width: config.responsiveScreenWidth(77),
                   backgroundColor:
                     theme.mode === 'no-preference'
                       ? '#fafafa'
@@ -521,7 +574,7 @@ function Registration({route, navigation}) {
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: '8%',
-                  width: '80%',
+                  width: config.responsiveScreenWidth(77),
                   backgroundColor:
                     theme.mode === 'no-preference'
                       ? '#fafafa'
@@ -641,7 +694,6 @@ function Registration({route, navigation}) {
                             ToastAndroid.LONG,
                           )
                         : Alert.alert('Select time after arrival time');
-                      setCheckTime('');
                       return false;
                     } else if (end == start) {
                       Platform.OS === 'android'
@@ -652,7 +704,6 @@ function Registration({route, navigation}) {
                         : Alert.alert(
                             'Arrival time and departure time should not be same',
                           );
-                      setCheckTime('');
                       return false;
                     } else {
                       departureTime(val, vals);
@@ -858,7 +909,7 @@ function Registration({route, navigation}) {
               value={emailVisitor}
               autoCapitalize="none"
               returnKeyType={'next'}
-              maxLength={20}
+              maxLength={300}
               onFocus={() => {}}
               onSubmitEditing={() => {
                 foodTruckRegRef.current.focus();
@@ -936,12 +987,12 @@ const Container = styled.View`
 
 const styles = StyleSheet.create({
   inputStyle: {
-    width: '80%',
+    width: config.responsiveScreenWidth(77),
     height: config.responsiveScreenHeight(6),
     fontSize: 18,
     paddingHorizontal: 18,
-    fontWeight: 'bold',
   },
+  textInputContainer: {},
 });
 
 const Title = styled.Text`
@@ -949,5 +1000,5 @@ const Title = styled.Text`
   font-weight: bold;
   color: ${(props) => (props.theme.text === '#575c66' ? '#eaeaeb' : '#575c66')};
   top: 10;
-  margin-vertical: 5;
+  margin-vertical: 10;
 `;

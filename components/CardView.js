@@ -27,10 +27,29 @@ import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 var isHidden = true;
 
-const CardView = ({children}) => {
+const CardView = ({children, isMoreTextInut}) => {
   const [bounceValue, setBounceValue] = useState(new Animated.Value(100));
   const theme = useTheme();
-  return <Container>{children}</Container>;
+  if (isMoreTextInut) {
+    return (
+      <Container>
+        <KeyboardAwareScrollView
+          enableOnAndroid={true}
+          enableAutomaticScroll={true}
+          contentContainerStyle={{
+            flexGrow: 1,
+            width: config.responsiveScreenWidth(80),
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          showsVerticalScrollIndicator={false}>
+          {children}
+        </KeyboardAwareScrollView>
+      </Container>
+    );
+  } else {
+    return <Container>{children}</Container>;
+  }
 };
 
 export default CardView;

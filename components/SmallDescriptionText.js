@@ -23,17 +23,17 @@ import config from '../config';
 import styled from 'styled-components/native';
 import ThemeManager, {useTheme} from '../ManageThemeProvider';
 
-const InfoText = (props) => {
+const SmallDescriptionText = (props) => {
   const theme = useTheme();
   return <Title>{props.text}</Title>;
 };
 
-export default InfoText;
+export default SmallDescriptionText;
 
 const Title = styled.Text`
-  font-size: ${JSON.stringify(config.responsiveScreenFontSize(1.7))};
+  font-size: ${JSON.stringify(config.responsiveScreenFontSize(1.4))};
   color: ${(props) => (props.theme.text === '#575c66' ? '#eaeaeb' : '#575c66')};
-  margin-vertical: 20;
+  margin-vertical: 2;
   width: ${JSON.stringify(config.width / 1.4)};
   font-weight: bold;
 `;
