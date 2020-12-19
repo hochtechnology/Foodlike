@@ -14,7 +14,6 @@ import {
   Image,
   Alert,
   ImageBackground,
-  AsyncStorage,
   PermissionsAndroid,
   BackHandler,
   Switch,
@@ -24,9 +23,8 @@ import {
 
 import config from '../config';
 import BaseLayout from '../components/BaseLayout';
-import CardView from '../components/CardView';
-import Heading_1 from '../components/Heading_1';
 import InfoText from '../components/InfoText';
+import AlertModal from '../components/AlertModal';
 import CustomButton from '../components/CustomButton';
 import SmallDescriptionText from '../components/SmallDescriptionText';
 import SmallButton from '../components/SmallButtons';
@@ -37,6 +35,8 @@ import styled from 'styled-components/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {useFocusEffect} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import {Picker} from '@react-native-community/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function FoodTruckMenu({route, navigation}) {
   const theme = useTheme();
@@ -51,9 +51,19 @@ function FoodTruckMenu({route, navigation}) {
   const [item_image_5, set_item_image_5] = useState('');
   const [images_selected, set_image_selected] = useState('');
   const [added_items, set_added_items] = useState([]);
-
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [clearMenuModal, setClearMenuModal] = useState(false);
+  const [selectedItemFrom, setSelectedItemFrom] = useState(0);
   const itemDescRef = useRef(null);
   const itemPriceRef = useRef(null);
+
+  const wheelPickerData = [
+    'Select',
+    'Italian',
+    'Gujarati',
+    'Punjabi',
+    'South Indian',
+  ];
 
   useEffect(() => {
     added();
@@ -62,50 +72,60 @@ function FoodTruckMenu({route, navigation}) {
   const callImagePicker = async () => {
     ImagePicker.openPicker({
       multiple: true,
-      mediaType: 'any',
-    }).then((images) => {
-      console.log(images);
-      if (images.length > 5) {
-        Platform.OS === 'android'
-          ? ToastAndroid.show(
-              'You can only select maximum 5 images',
-              ToastAndroid.LONG,
-            )
-          : Alert.alert('You can only select maximum 5 images');
-        set_image_selected('');
-        return false;
-      } else {
-        set_image_selected(images.length);
+      mediaType: 'photo',
+    })
+      .then((images) => {
+        console.log(images);
+        if (images.length > 5) {
+          Platform.OS === 'android'
+            ? ToastAndroid.show(
+                'You can only select maximum 5 images',
+                ToastAndroid.LONG,
+              )
+            : Alert.alert('You can only select maximum 5 images');
+          set_image_selected('');
+          return false;
+        } else {
+          set_image_selected(images.length);
 
+          set_item_image_1('');
+          set_item_image_2('');
+          set_item_image_3('');
+          set_item_image_4('');
+          set_item_image_5('');
+
+          return Promise.all(
+            images.map(async (item, index) => {
+              if (index === 0) {
+                set_item_image_1(item.path);
+              } else if (index === 1) {
+                set_item_image_2(item.path);
+              } else if (index === 2) {
+                set_item_image_3(item.path);
+              } else if (index === 3) {
+                set_item_image_4(item.path);
+              } else if (index === 4) {
+                set_item_image_5(item.path);
+              } else {
+                console.log('error');
+              }
+            }),
+          )
+            .then((e) => {})
+            .catch((E) => {
+              console.log(E);
+            });
+        }
+      })
+      .catch((e) => {
+        console.log('picker err', e);
+        set_image_selected('');
         set_item_image_1('');
         set_item_image_2('');
         set_item_image_3('');
         set_item_image_4('');
         set_item_image_5('');
-
-        return Promise.all(
-          images.map(async (item, index) => {
-            if (index === 0) {
-              set_item_image_1(item.path);
-            } else if (index === 1) {
-              set_item_image_2(item.path);
-            } else if (index === 2) {
-              set_item_image_3(item.path);
-            } else if (index === 3) {
-              set_item_image_4(item.path);
-            } else if (index === 4) {
-              set_item_image_5(item.path);
-            } else {
-              console.log('error');
-            }
-          }),
-        )
-          .then((e) => {})
-          .catch((E) => {
-            console.log(E);
-          });
-      }
-    });
+      });
   };
   const added = () => {
     console.log(
@@ -133,6 +153,11 @@ function FoodTruckMenu({route, navigation}) {
         Platform.OS === 'android'
           ? ToastAndroid.show('Enter item description', ToastAndroid.LONG)
           : Alert.alert('Enter item description');
+        return false;
+      } else if (selectedItemFrom === 0) {
+        Platform.OS === 'android'
+          ? ToastAndroid.show('Select item type', ToastAndroid.LONG)
+          : Alert.alert('Select item type');
         return false;
       } else if (itemPrice === '') {
         Platform.OS === 'android'
@@ -164,6 +189,15 @@ function FoodTruckMenu({route, navigation}) {
             images_5: `${item_image_5}`,
           },
         ]);
+        set_item_image_1('');
+        set_item_image_2('');
+        set_item_image_3('');
+        set_item_image_4('');
+        set_item_image_5('');
+        setItemTitle('');
+        setItemDescription('');
+        setItemPrice('');
+        set_image_selected('');
         console.log('this is add', added_items);
       }
     } else {
@@ -243,6 +277,78 @@ function FoodTruckMenu({route, navigation}) {
             blurOnSubmit={false}
             autoCorrect={false}></TextInput>
 
+          <InfoText text={'Item type:'}></InfoText>
+          {/* item type */}
+          <View
+            style={[
+              styles.inputStyle,
+              {
+                backgroundColor:
+                  theme.mode === 'no-preference'
+                    ? '#fafafa'
+                    : theme.mode === 'light'
+                    ? '#eaeaeb'
+                    : '#575c66',
+                borderRadius: 20,
+                color:
+                  theme.mode === 'no-preference'
+                    ? '#575c66'
+                    : theme.mode === 'light'
+                    ? '#575c66'
+                    : '#eaeaeb',
+                justifyContent: 'center',
+              },
+            ]}>
+            <Picker
+              selectedValue={selectedItemFrom}
+              style={{
+                width: '70%',
+                color:
+                  Platform.OS === 'android'
+                    ? theme.mode === 'no-preference'
+                      ? '#575c66'
+                      : theme.mode === 'light'
+                      ? '#575c66'
+                      : '#eaeaeb'
+                    : '',
+                backgroundColor:
+                  Platform.OS === 'android'
+                    ? theme.mode === 'no-preference'
+                      ? '#fafafa'
+                      : theme.mode === 'light'
+                      ? '#eaeaeb'
+                      : '#575c66'
+                    : '',
+                height:
+                  Platform.OS === 'ios'
+                    ? config.responsiveScreenHeight(6)
+                    : '50%',
+              }}
+              itemStyle={{
+                backgroundColor:
+                  theme.mode === 'no-preference'
+                    ? '#fafafa'
+                    : theme.mode === 'light'
+                    ? '#eaeaeb'
+                    : '#575c66',
+                borderRadius: 20,
+                height: config.responsiveScreenHeight(6),
+                fontSize: config.responsiveScreenFontSize(1.88),
+                color:
+                  theme.mode === 'no-preference'
+                    ? '#575c66'
+                    : theme.mode === 'light'
+                    ? '#575c66'
+                    : '#eaeaeb',
+              }}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedItemFrom(itemValue);
+              }}>
+              {wheelPickerData.map((item, index) => {
+                return <Picker.Item label={item} value={index} />;
+              })}
+            </Picker>
+          </View>
           {/* item Desc */}
 
           <TextInput
@@ -385,66 +491,7 @@ function FoodTruckMenu({route, navigation}) {
           ) : (
             <SmallDescriptionText text={`${images_selected} image selected`} />
           )}
-          {/* <Modal
-          transparent={true}
-          visible={modal}
-          onRequestClose={() => showModal(false)}
-          animationType="slide">
-          <TouchableOpacity
-            onPress={() => showModal(false)}
-            style={{
-              height: config.height,
-              width: config.width,
-              opacity: 0.6,
-              backgroundColor: '#121212',
-              position: 'absolute',
-            }}
-          />
-          <View style={styles.modalDesign}>
-            <View
-              style={{
-                height: '15%',
-                width: config.responsiveScreenWidth(80),
-                borderBottomLeftRadius: 50,
-                borderBottomRightRadius: 50,
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                backgroundColor:
-                  theme.mode === 'no-preference'
-                    ? `${config.primaryColor}`
-                    : theme.mode === 'light'
-                    ? `${config.primaryColor}`
-                    : `${config.secondaryColor}`,
-              }}>
-              <Image
-                source={require('../assests/foodIcons/food_2.png')}
-                style={{
-                  height: config.responsiveScreenHeight(8),
-                  width: config.responsiveScreenWidth(8),
-                  position: 'absolute',
-                  left: '10%',
-                }}
-                resizeMode="contain"
-              />
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 'bold',
-                  color:
-                    theme.mode === 'no-preference'
-                      ? `black`
-                      : theme.mode === 'light'
-                      ? `black`
-                      : `white`,
-                }}>
-                Menu
-              </Text>
-            </View>
-          </View>
-        </Modal> */}
 
-          {/* <InfoText text={'🚮 Do you want to clear menu ?'} /> */}
           <CustomButton
             text={'Add Menu Item'}
             onPress={() => addItemToArray()}
@@ -525,6 +572,14 @@ function FoodTruckMenu({route, navigation}) {
               })}
             </ScrollView>
           </View>
+          <TouchableOpacity
+            onPress={() =>
+              added_items.length === 0 || added_items === undefined
+                ? {}
+                : setClearMenuModal(true)
+            }>
+            <Title2>🚮 Do you want to clear all menu?</Title2>
+          </TouchableOpacity>
 
           <CustomButton
             text={'Save menu'}
@@ -536,10 +591,51 @@ function FoodTruckMenu({route, navigation}) {
                       ToastAndroid.LONG,
                     )
                   : Alert.alert('Please add at least 1 menu item')
-                : Alert.alert('success')
+                : setConfirmationModal(true)
             }
           />
         </KeyboardAwareScrollView>
+
+        <AlertModal
+          visible={confirmationModal}
+          text={'Are you sure you want to save this menu and register?'}
+          buttonYesText={'Yes'}
+          buttonNoText={'No'}
+          onYesPress={async () => {
+            console.log('success'),
+              setConfirmationModal(false),
+              await AsyncStorage.setItem('User', 'Foodtruck')
+                .then(() => {
+                  navigation.navigate('Home');
+                })
+                .then(() => {
+                  navigation.navigate('Home');
+                })
+                .catch((e) => {
+                  console.log('async e', e);
+                });
+          }}
+          onNoPress={() => {
+            setConfirmationModal(false);
+          }}
+          onRequestClose={() => {
+            setConfirmationModal(false);
+          }}></AlertModal>
+
+        <AlertModal
+          visible={clearMenuModal}
+          text={'Are you sure you want to clear all menu items?'}
+          buttonYesText={'Yes'}
+          buttonNoText={'No'}
+          onYesPress={() => {
+            set_added_items([]), setClearMenuModal(false);
+          }}
+          onNoPress={() => {
+            setClearMenuModal(false);
+          }}
+          onRequestClose={() => {
+            setClearMenuModal(false);
+          }}></AlertModal>
       </Container>
     </BaseLayout>
   );
@@ -583,4 +679,9 @@ const Title = styled.Text`
   color: ${(props) => (props.theme.text === '#575c66' ? '#eaeaeb' : '#575c66')};
   top: 10;
   margin-vertical: 10;
+`;
+
+const Title2 = styled.Text`
+  font-size: 12;
+  color: ${(props) => (props.theme.text === '#575c66' ? '#eaeaeb' : '#575c66')};
 `;

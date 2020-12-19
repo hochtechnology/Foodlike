@@ -14,7 +14,6 @@ import {
   Image,
   Alert,
   ImageBackground,
-  AsyncStorage,
   PermissionsAndroid,
   BackHandler,
   Switch,
@@ -34,6 +33,7 @@ import {Picker} from '@react-native-community/picker';
 import moment from 'moment';
 import {TimePicker} from 'react-native-propel-kit';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Registration({route, navigation}) {
   const [name, setName] = useState('');
@@ -962,7 +962,14 @@ function Registration({route, navigation}) {
               blurOnSubmit={false}
               ref={foodTruckRegRef}></TextInput>
 
-            <CustomButton text={'Next'} onPress={() => {}} />
+            <CustomButton
+              text={'Next'}
+              onPress={async () =>
+                await AsyncStorage.setItem('User', 'Visitor').then(() => {
+                  navigation.navigate('Home');
+                })
+              }
+            />
           </KeyboardAwareScrollView>
         </CardView>
       </BaseLayout>

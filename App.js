@@ -32,9 +32,137 @@ import OtpVerify from './AuthViews/OtpVerifyScreen';
 import Designation from './AuthViews/Designation';
 import Registration from './AuthViews/RegistrationPage';
 import FoodTruckMenu from './AuthViews/FoodTruckMenu';
+import Home from './AppViews/HomePage';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 
+const Tab = createMaterialBottomTabNavigator();
 const Stack = createStackNavigator();
 console.disableYellowBox = true;
+
+function HomeBottom() {
+  const theme = useTheme();
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      activeColor={
+        theme.mode === 'no-preference'
+          ? `${config.primaryColor}`
+          : theme.mode === 'light'
+          ? `${config.primaryColor}`
+          : `${config.secondaryColor}`
+      }
+      barStyle={{
+        backgroundColor:
+          theme.mode === 'no-preference'
+            ? '#575c66'
+            : theme.mode === 'light'
+            ? '#575c66'
+            : '#eaeaeb',
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
+        // borderColor: 'transparent',
+        overflow: 'hidden',
+        position: 'absolute',
+        height: config.responsiveScreenHeight(8),
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('./assests/icons/home.png')}
+              style={{
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
+                tintColor: color,
+              }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="f"
+        component={Home}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('./assests/icons/user.png')}
+              style={{
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
+                tintColor: color,
+              }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="add"
+        component={Home}
+        options={{
+          tabBarLabel: 'Add Menu',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('./assests/icons/add.png')}
+              style={{
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
+                tintColor: color,
+              }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="feeds"
+        component={Home}
+        options={{
+          tabBarLabel: 'Feed backs',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('./assests/icons/feeds.png')}
+              style={{
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
+                tintColor: color,
+              }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name="recent"
+        component={Home}
+        options={{
+          tabBarLabel: 'Recent Visit',
+          tabBarIcon: ({color}) => (
+            <Image
+              source={require('./assests/icons/recent.png')}
+              style={{
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
+                tintColor: color,
+              }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+
+      {/* <Tab.Screen name="Messages" component={Messages} /> */}
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <BackdropProvider>
@@ -79,6 +207,14 @@ export default function App() {
             <Stack.Screen
               name="FoodTruckMenu"
               component={FoodTruckMenu}
+              options={{
+                ...TransitionPresets.ModalSlideFromBottomIOS,
+              }}
+            />
+
+            <Stack.Screen
+              name="Home"
+              component={HomeBottom}
               options={{
                 ...TransitionPresets.ModalSlideFromBottomIOS,
               }}

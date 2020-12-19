@@ -13,7 +13,6 @@ import {
   Image,
   Alert,
   ImageBackground,
-  AsyncStorage,
   PermissionsAndroid,
   BackHandler,
 } from 'react-native';
@@ -23,11 +22,14 @@ import {
   responsiveScreenWidth,
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
+
 const {height, width} = Dimensions.get('window');
 
 exports.primaryColor = '#ffe135';
 
 exports.secondaryColor = 'tomato';
+
+
 
 exports.height = height;
 exports.width = width;

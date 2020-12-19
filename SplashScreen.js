@@ -229,17 +229,18 @@ function SplashScreen({route, navigation}) {
         }}>
         {imgArray.map((item, index) => {
           return (
-            <FastImage
+            <ImageBackground
               source={item.img}
               style={{
-                height: config.responsiveScreenHeight(8),
-                width: config.responsiveScreenWidth(8),
+                height: config.responsiveScreenHeight(4),
+                width: config.responsiveScreenWidth(4),
                 position: 'absolute',
                 right: item.per_2,
                 top: item.per_1,
                 // transform: [{rotate: '90deg'}],
               }}
               resizeMode="contain"
+              blurRadius={Platform.OS === 'android' ? 10 : 1.5}
             />
           );
         })}

@@ -18,6 +18,7 @@ import {
   PermissionsAndroid,
   BackHandler,
   Switch,
+  SafeAreaView,
 } from 'react-native';
 import config from '../config';
 import styled from 'styled-components/native';
@@ -183,64 +184,70 @@ let imgArray = [
   },
 ];
 
-const BaseLayout = ({children}) => {
+const BaseLayout = ({children, disableColorView}) => {
   const theme = useTheme();
   console.log(theme);
   return (
     <Container>
+      {disableColorView ? (
+        <View />
+      ) : (
+        <View
+          style={{
+            position: 'absolute',
+            zIndex: -10,
+            height: config.height,
+            width: config.width / 2,
+            backgroundColor:
+              theme.mode === 'no-preference'
+                ? `${config.primaryColor}`
+                : theme.mode === 'light'
+                ? `${config.primaryColor}`
+                : `${config.secondaryColor}`,
+            borderTopLeftRadius: config.height / 2,
+            borderBottomLeftRadius: config.height / 2,
+            shadowRadius: 5,
+            shadowOpacity: 0.5,
+            shadowOffset: {
+              height: 0,
+              width: 0,
+            },
+            shadowColor: 'gray',
+            top: 0,
+            right: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}>
+          {imgArray.map((item, index) => {
+            return (
+              <ImageBackground
+                source={item.img}
+                style={{
+                  height: config.responsiveScreenHeight(4),
+                  width: config.responsiveScreenWidth(4),
+                  position: 'absolute',
+                  right: item.per_2,
+                  top: item.per_1,
+                  // transform: [{rotate: '90deg'}],
+                }}
+                resizeMode="contain"
+                blurRadius={Platform.OS === 'android' ? 10 : 1.5}
+              />
+            );
+          })}
+        </View>
+      )}
+
       <Switch
         value={theme.mode === 'dark'}
         onValueChange={(value) => theme.setMode(value ? 'dark' : 'light')}
         style={{
           position: 'absolute',
-          top: '5%',
+          top: '15%',
           left: '5%',
         }}
       />
-      <View
-        style={{
-          position: 'absolute',
-          zIndex: -10,
-          height: config.height,
-          width: config.width / 2,
-          backgroundColor:
-            theme.mode === 'no-preference'
-              ? `${config.primaryColor}`
-              : theme.mode === 'light'
-              ? `${config.primaryColor}`
-              : `${config.secondaryColor}`,
-          borderTopLeftRadius: config.height / 2,
-          borderBottomLeftRadius: config.height / 2,
-          shadowRadius: 5,
-          shadowOpacity: 0.5,
-          shadowOffset: {
-            height: 0,
-            width: 0,
-          },
-          shadowColor: 'gray',
-          top: 0,
-          right: 0,
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}>
-        {imgArray.map((item, index) => {
-          return (
-            <FastImage
-              source={item.img}
-              style={{
-                height: config.responsiveScreenHeight(8),
-                width: config.responsiveScreenWidth(8),
-                position: 'absolute',
-                right: item.per_2,
-                top: item.per_1,
-                // transform: [{rotate: '90deg'}],
-              }}
-              resizeMode="contain"
-            />
-          );
-        })}
-      </View>
 
       {children}
     </Container>
